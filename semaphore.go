@@ -17,7 +17,7 @@
 //
 // There is a global version and locally allocatable version, neither uses
 // mutexes but the global version does use a sync.WaitGroup for syncronization.
-package semaphore // github.com/jsipprell/go-semaphore
+package semaphore // "github.com/jsipprell/go-semaphore"
 
 import (
 	"errors"
