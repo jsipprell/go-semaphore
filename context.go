@@ -11,8 +11,6 @@
  *    documentation and/or other materials provided with the distribution.
  */
 
-// Context-aware semaphore interface
-// (using golang.org/x/net/context)
 package semaphore
 
 import (
@@ -22,25 +20,26 @@ import (
 // An optional context-aware semaphore that is compatible with standard
 // semaphores.  Usage:
 //
-// s := semaphore.New(max)
-// ctx, sem := semaphore.WithContext(s, context)
-// // the above returns a new child context
-// release := <-sem.Acquire():
-// if release != nil {
-//  	release() // will be nil if context completed before acquiring
-// }
+//      s := semaphore.New(max)
+//      ctx, sem := semaphore.WithContext(s, context)
+//      // the above returns a new child context
+//      release := <-sem.Acquire():
+//      if release != nil {
+//  	      // will be nil if context completed before acquiring
+//            release()
+//      }
 //
 // Context aware semaphores atomically acquire a sempahore as long as their
 // parent context has not been cancelled. They return a cancellation function
-// that will both release the sempahore and cancel the sub-context created
-// for the sempahore. This cancellation function *must* be called in order
-// to properly release the semaphore.
+// that will both release the sempahore and cancel the sub-context created for
+// the sempahore. This cancellation function *must* be called in order to
+// properly release the semaphore.
 //
 // If the parent context is cancelled before the semaphore is acquired,
 // Acquire() returns nil.
 //
-// It is acceptable to call the cancellation function even if the parent
-// or child contexts have already completed.
+// It is acceptable to call the cancellation function even if the parent or
+// child contexts have already completed.
 type ContextSemaphore interface {
 	Acquire() <-chan context.CancelFunc
 }
@@ -51,10 +50,10 @@ func (f acquireFunc) Acquire() <-chan context.CancelFunc {
 	return f()
 }
 
-// Acquire a context-aware semaphore resource available on a channel.
-// Returns nil if the parent context was cancelled or completed before semaphore acuisition,
-// othewise returns a context cancellation function which *MUST* be used to
-// release the sempahore and cancel the subcontext.
+// Acquire a context-aware semaphore resource available on a channel.  Returns
+// nil if the parent context was cancelled or completed before semaphore
+// acquisition, othewise returns a context cancellation function which *MUST*
+// be used to release the sempahore and cancel the subcontext.
 //
 // Note: returns a new child context which can be monitored just as with
 // context.WithCacenl().
